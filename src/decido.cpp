@@ -6,8 +6,8 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 IntegerVector earcut_cpp(NumericVector x, NumericVector y,
-                     IntegerVector holes = -1,
-                     IntegerVector numholes = 0) {
+                     IntegerVector holes,
+                     IntegerVector numholes) {
   using Coord = double;
   // The index type. Defaults to uint32_t, but you can also pass uint16_t if you know that your
   // data won't have more than 65536 vertices.
@@ -17,20 +17,26 @@ IntegerVector earcut_cpp(NumericVector x, NumericVector y,
   using Polygon = std::vector<Point>;
   Polygon poly;
   using Polygons = std::vector<Polygon>;
-  int vcount = x.length();
+
+  int vcount = static_cast <int> (x.length());
   Point pt;
   Polygons polyrings;
- // Rprintf("numholes %i\n", numholes[0]);
+ // if (numholes.size())
+//    Rcout << "numholes[0]:" << numholes[0] << std::endl;
   int hole_index = 0;
   for (int ipoint = 0; ipoint < vcount; ipoint++) {
     pt = {x[ipoint], y[ipoint]};
     // don't add the point if we are starting a new ring
-    if (numholes[0] > 0) {
-      if (ipoint == holes[hole_index]) {
-       // Rprintf("pushback poly %i\n", ipoint + 1);
+    if (numholes.size() && numholes[0] > 0) {
+      if (hole_index < holes.size()) {
+//         throw std::runtime_error("bounds");
+      int ihole = holes[hole_index];
+      if (ipoint == ihole) {
+        // Rprintf("pushback poly %i\n", ipoint + 1);
         polyrings.push_back(poly);
         poly.clear();
-        hole_index = hole_index + 1;
+        hole_index++;
+      }
       }
     }
     // now add the point
@@ -45,8 +51,8 @@ IntegerVector earcut_cpp(NumericVector x, NumericVector y,
   std::vector<N> indices = mapbox::earcut<N>(polyrings);
 
   IntegerVector out(indices.size());
-  for (int j = 0; j < out.length(); j++){
-    out[j] = indices[j];
+  for (size_t j = 0; j < static_cast <size_t> (out.length()); j++){
+    out[static_cast <R_xlen_t> (j)] = static_cast <int> (indices[j]);
   }
   return out;
 }

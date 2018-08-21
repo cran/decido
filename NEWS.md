@@ -1,9 +1,22 @@
+# decido 0.2.0
+
+* Increased automated test coverage of underlying library code. 
+
+* Fixed a memory bug, thanks to CRAN checks. 
+
+* Cleaned up some Rcpp defaults. 
+
+* Updated readme. 
+
+* Move oz to Suggests. 
+
 # decido 0.1.0
 
 * Modified description based on advice from CRAN. 
 
 * `earcut` is now generic, with a default argument that operates on matrix, 
- list or data frame inputs - future extensions may dispatch on class of  single xy argument.
+ list or data frame inputs - future extensions may dispatch on class of  single xy 
+ argument.
  
 * Breaking change, all R functions now have `xy` as first argument, no more
  `x` or `y` as separate vectors. xy maybe a matrix, a list, or a dataframe. 

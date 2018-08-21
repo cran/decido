@@ -77,7 +77,7 @@ earcut <- function(xy, holes = 0, ...) {
 }
 #' @name earcut
 #' @export
-earcut.default <- function(xy, holes = 0, ...) {
+earcut.default <- function(xy, holes = 0L, ...) {
   xy <- handle_xy(xy)
   x <- xy[ ,1L]
   y <- xy[ ,2L]
@@ -87,8 +87,12 @@ earcut.default <- function(xy, holes = 0, ...) {
   if (any(holes < 4) && length(holes) > 1) stop("no hole can begin before element 4")
   if (any(holes > (length(x) - 2))) stop("no hole can begin later than 3 elements from the end")
   nholes <- length(holes)
-  if (holes[1] == 0) nholes <- 0
-  earcut_cpp(x, y, holes = holes - 1, numholes = nholes) + 1L
+  if (holes[1] == 0) {
+    ## a nonsense situation, so we reset to be sure
+    nholes <- 0L
+    holes <- 0L
+  }
+  earcut_cpp(x, y, holes = as.integer(holes - 1), numholes = as.integer(nholes)) + 1L
 }
 #' Plot ears or polygons
 #'
