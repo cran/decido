@@ -1,17 +1,21 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/hypertidy/decido/workflows/R-CMD-check/badge.svg)](https://github.com/hypertidy/decido/actions)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle/#stable)
 [![Travis-CI Build
-Status](http://badges.herokuapp.com/travis/hypertidy/decido?branch=master&env=BUILD_NAME=trusty_release&label=linux)](https://travis-ci.org/hypertidy/decido)
-[![Build
-Status](http://badges.herokuapp.com/travis/hypertidy/decido?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/hypertidy/decido)
+Status](http://badges.herokuapp.com/travis/hypertidy/decido)](https://travis-ci.org/hypertidy/decido)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/decido?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/decido)
 [![Coverage
 status](https://codecov.io/gh/hypertidy/decido/branch/master/graph/badge.svg)](https://codecov.io/github/hypertidy/decido?branch=master)
 [![CRAN RStudio mirror
 downloads](http://cranlogs.r-pkg.org/badges/decido)](https://CRAN.R-project.org/package=decido)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/decido)](https://CRAN.R-project.org/package=decido)
+<!-- badges: end -->
 
 # decido
 
@@ -27,12 +31,6 @@ successively ‘cutting’ triangles from a polygon defined by path/s. Holes
 are supported, the earcut library works with single-island-with-holes
 polygons, analogous to the POLYGON type in simple features.
 
-This augments the Javascript version available in
-[rearcut](https://github.com/hypertidy/rearcut.git) (also an R wrapper
-of the JS version by Mapbox). Only very minimal comparison testing has
-yet been done to [compare these
-implementations](http://rpubs.com/cyclemumner/364247).
-
 ## Installation
 
 Install the released version from CRAN.
@@ -42,13 +40,11 @@ install.packages("decido")
 ```
 
 You can install the development version from GitHub with the following
-code. You will need the [set of development
-tools](https://www.rstudio.com/products/rpackages/devtools/) for
-building source packages with binary code.
+code.
 
 ``` r
-## install.packages("devtools")
-devtools::install_github("hypertidy/decido", build_vignettes = TRUE)
+## install.packages("remotes")
+remotes::install_github("hypertidy/decido")
 ```
 
 ## Example
@@ -76,15 +72,61 @@ vignette("decido", package = "decido")
 
 ## Development
 
-This is motivated by the topology aspirations of
-[hypertidy/silicate](https://github.com/hypertidy/silicate). We need
-tools for decomposing shape data into primitives for analysis and
+There is a C++ headers API for decido.
+
+``` r
+library(Rcpp)
+
+cppFunction(
+  depends = "decido"
+  , includes = '#include "decido/decido.hpp"'
+  , code = '
+    Rcpp::IntegerVector earcut0( SEXP polygon ) {
+      return decido::api::earcut( polygon );
+    }
+  '
+)
+
+poly <- list(matrix(c(0,0,0,1,1,1,1,0,0,0), ncol = 2, byrow = T))
+earcut0( poly )
+#> [1] 1 4 3 3 2 1
+```
+
+## Motivation
+
+Triangles can be addictive once you get used to them and can really
+focus attention on how simple things work. I love this sneaky trick for
+turning a set of unique coordinates into a picture with basic array,
+plot, and index idioms.
+
+``` r
+library(decido)
+x <- c(0, 0, 0.75, 1, 0.5, 0.8, 0.69)
+y <- c(0, 1, 1, 0.8, 0.7, 0.6, 0)
+idx <- earcut(cbind(x, y))
+
+## idx is triplets of indices into x,y 
+plot(cbind(x, y)[rbind(matrix(idx, nrow = 3), NA), ], type = "l", lwd = 2, col = "darkgrey")
+```
+
+<img src="man/figures/README-tricks-1.png" width="100%" />
+
+The need for polygon triangulation was originally motivated by the
+topology aspirations of
+[silicate](https://CRAN.r-project.org/package=silicate) needing tools
+for decomposing shape data into primitives for analysis and
 visualization. Decomposition into graph types is already well supported
 and exercised, but triangulations of paths versus triangulations from
 edges are two key facilities needed for greater control.
 
-This broader project is fairly well advanced in silicate and show-cased
-in [hypertidy/anglr](https://github.com/hypertidy/anglr).
+This broader project is fairly well advanced in silicate which provides
+ear-cutting triangulations and enhanced with high-quality methods in
+[hypertidy/anglr](https://github.com/hypertidy/anglr).
+
+To triangulate sf polygons see [function
+here](https://github.com/hypertidy/decido/issues/9). For high-quality
+triangulations of sf polygons directly see
+[sfdct](https://CRAN.r-project.org/package=sfdct).
 
 ## Other implementations
 
@@ -94,17 +136,33 @@ Ear clipping (or ear cutting) is also available in the
 [lawn](https://CRAN.r-project.org/package=lawn) function
 `lawn_tesselate` (implemented via the Mapbox Javascript library earcut).
 In rgl the function also classifies input coordinates according to their
-nesting, a necessary first step if the relaionship between holes and
+nesting, a necessary first step if the relationship between holes and
 islands is not known. The `INLA` package has some kind of
 constraint-based triangulation, but I don’t yet know the details.
 
 In comparison to path-based ear-clipping, other libraries ‘Triangle’ and
 ‘CGAL’ provide edge-based *mostly Delaunay* triangulation. The Triangle
 library is available in the R package
-[RTriangle](https://CRAN.r-project.org/package=RTriangle). Experimental
-implementations binding CGAL are in
+[RTriangle](https://CRAN.r-project.org/package=RTriangle), for spatial
+formats in the [anglr](https://CRAN.r-project.org/package=anglr), and in
+a limited sf wrapper in
+[sfdct](https://CRAN.r-project.org/package=sfdct).
+
+The best prospects for high-quality trianguation is probably the
+[CGAL](https://www.cgal.org/) library, and this now available to R via
+the [cgalheaders](https://github.com/dickoa/cgalheaders) package,
+similarly used in the [prepair](https://github.com/dickoa/prepair)
+package.
+
+Older experimental implementations binding CGAL are in
 [rcgal](https://github.com/s-u/rcgal) and
 [laridae](https://github.com/hypertidy/laridae).
+
+There’s an interesting new package
+[terrainmeshr](https://CRAN.r-project.org/package=terrainmeshr)for
+triangulating rasters based on the
+[hmm](https://github.com/fogleman/hmm) library, this is leveraged in the
+dev-version of the [anglr](https://CRAN.r-project.org/package=anglr).
 
 Do you know of others? Let me know\! Triangulation is common across many
 R packages, but constrained algorithms are pretty rare (it’s hard).
@@ -113,8 +171,12 @@ many packages, and I’m compiling a list of those as well. OTOH there’s
 rgeos, sf, deldir, geometry, tripack, spatstat, akima, several
 mesh-related packages Rvcg, meshsimp, icosa, webglobe …
 
+There’s a rough and old benchmark here:
+<https://rpubs.com/cyclemumner/416456>
+
 -----
 
 Please note that the decido project is released with a [Contributor Code
-of Conduct](CODE_OF_CONDUCT.md). By participating in this project you
-agree to abide by its terms.
+of
+Conduct](https://github.com/hypertidy/decido/blob/master/CODE_OF_CONDUCT.md).
+By participating in this project you agree to abide by its terms.

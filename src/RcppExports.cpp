@@ -19,3 +19,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// earcut_sfg
+IntegerVector earcut_sfg(SEXP& sfg);
+RcppExport SEXP _decido_earcut_sfg(SEXP sfgSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP& >::type sfg(sfgSEXP);
+    rcpp_result_gen = Rcpp::wrap(earcut_sfg(sfg));
+    return rcpp_result_gen;
+END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_decido_earcut_cpp", (DL_FUNC) &_decido_earcut_cpp, 4},
+    {"_decido_earcut_sfg", (DL_FUNC) &_decido_earcut_sfg, 1},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_decido(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
