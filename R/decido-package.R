@@ -2,8 +2,6 @@
 #' @importFrom Rcpp sourceCpp
 NULL
 
-#' @keywords internal
-"_PACKAGE"
 
 
 #' decido
@@ -12,8 +10,7 @@ NULL
 #' ear clipping) applies constrained triangulation by successively 'cutting'
 #' triangles from a polygon defined by path/s. Holes are supported.
 #' This package wraps the 'header-only' library 'earcut.hpp'
-#' <https://github.com/mapbox/earcut.hpp.git>.
+#' <https://github.com/mapbox/earcut.hpp>.
 #'
 #' @name decido-package
-#' @docType package
-NULL
+"_PACKAGE"

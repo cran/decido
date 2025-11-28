@@ -4,25 +4,18 @@
 \name{decido-package}
 \alias{decido}
 \alias{decido-package}
-\title{decido: Bindings for 'Mapbox' Ear Cutting Triangulation Library}
+\title{decido}
 \description{
-Provides constrained triangulation of polygons. Ear cutting (or 
- ear clipping) applies constrained triangulation by successively 'cutting'
- triangles from a polygon defined by path/s. Holes are supported by introducing
- a bridge segment between polygon paths. This package wraps the 'header-only' 
- library 'earcut.hpp' <https://github.com/mapbox/earcut.hpp.git> which includes
- a reference to the method used by Held, M. (2001) <doi:10.1007/s00453-001-0028-4>.
-
 Provides constrained triangulation of polygons. Ear cutting (or
 ear clipping) applies constrained triangulation by successively 'cutting'
 triangles from a polygon defined by path/s. Holes are supported.
 This package wraps the 'header-only' library 'earcut.hpp'
-\url{https://github.com/mapbox/earcut.hpp.git}.
+\url{https://github.com/mapbox/earcut.hpp}.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://hypertidy.github.io/decido}
+  \item \url{https://hypertidy.github.io/decido/}
   \item Report bugs at \url{https://github.com/hypertidy/decido/issues}
 }
 
@@ -39,4 +32,3 @@ Other contributors:
 }
 
 }
-\keyword{internal}

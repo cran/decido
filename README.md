@@ -4,13 +4,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/hypertidy/decido/workflows/R-CMD-check/badge.svg)](https://github.com/hypertidy/decido/actions)
-[![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle/#stable)
-[![Travis-CI Build
-Status](http://badges.herokuapp.com/travis/hypertidy/decido)](https://travis-ci.org/hypertidy/decido)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/decido?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/decido)
 [![Coverage
-status](https://codecov.io/gh/hypertidy/decido/branch/master/graph/badge.svg)](https://codecov.io/github/hypertidy/decido?branch=master)
+status](https://codecov.io/gh/hypertidy/decido/branch/master/graph/badge.svg)](https://app.codecov.io/github/hypertidy/decido?branch=master)
 [![CRAN RStudio mirror
 downloads](http://cranlogs.r-pkg.org/badges/decido)](https://CRAN.R-project.org/package=decido)
 [![CRAN
@@ -106,7 +101,7 @@ y <- c(0, 1, 1, 0.8, 0.7, 0.6, 0)
 idx <- earcut(cbind(x, y))
 
 ## idx is triplets of indices into x,y 
-plot(cbind(x, y)[rbind(matrix(idx, nrow = 3), NA), ], type = "l", lwd = 2, col = "darkgrey")
+plot(cbind(x, y)[rbind(matrix(idx, nrow = 3)[c(1:3, 1), ], NA), ], type = "l", lwd = 2, col = "darkgrey")
 ```
 
 <img src="man/figures/README-tricks-1.png" width="100%" />
@@ -150,9 +145,8 @@ a limited sf wrapper in
 
 The best prospects for high-quality trianguation is probably the
 [CGAL](https://www.cgal.org/) library, and this now available to R via
-the [cgalheaders](https://github.com/dickoa/cgalheaders) package,
-similarly used in the [prepair](https://github.com/dickoa/prepair)
-package.
+the [cgalheaders](https://github.com/dickoa/cgalh) package, similarly
+used in the [prepair](https://github.com/dickoa/prepr) package.
 
 Older experimental implementations binding CGAL are in
 [rcgal](https://github.com/s-u/rcgal) and
@@ -164,7 +158,7 @@ triangulating rasters based on the
 [hmm](https://github.com/fogleman/hmm) library, this is leveraged in the
 dev-version of the [anglr](https://CRAN.r-project.org/package=anglr).
 
-Do you know of others? Let me know\! Triangulation is common across many
+Do you know of others? Let me know! Triangulation is common across many
 R packages, but constrained algorithms are pretty rare (it’s hard).
 There are many Delaunay and other non-constrained implementations in
 many packages, and I’m compiling a list of those as well. OTOH there’s
@@ -174,7 +168,7 @@ mesh-related packages Rvcg, meshsimp, icosa, webglobe …
 There’s a rough and old benchmark here:
 <https://rpubs.com/cyclemumner/416456>
 
------
+------------------------------------------------------------------------
 
 Please note that the decido project is released with a [Contributor Code
 of

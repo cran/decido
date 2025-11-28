@@ -1,3 +1,13 @@
+# decido 0.4.0
+
+* Remove C++11 requirement, thanks to CRAN. 
+
+* Update broken links. 
+
+* Convert to 'main' as default branch. 
+
+* Small fixes and CI updates. 
+
 # decido 0.3.0
 
 * Remove old src/init.c partially manual registration. 

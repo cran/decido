@@ -40,23 +40,23 @@ plot_ears(cbind(x, y), ind, col = "grey")
 
 
 ## ----headers, eval = FALSE, include = TRUE------------------------------------
-#  ## this code is not run in the vignette
-#  ## but can be run as is with decido installed
-#  library(Rcpp)
-#  
-#  cppFunction(
-#    depends = "decido"
-#    , includes = '#include "decido/decido.hpp"'
-#    , code = '
-#      Rcpp::IntegerVector earcut0( SEXP polygon ) {
-#        return decido::api::earcut( polygon );
-#      }
-#    '
-#  )
-#  
-#  poly <- list(matrix(c(0,0,0,1,1,1,1,0,0,0), ncol = 2, byrow = T))
-#  earcut0( poly )
-#  # [1] 1 4 3 3 2 1
+# ## this code is not run in the vignette
+# ## but can be run as is with decido installed
+# library(Rcpp)
+# 
+# cppFunction(
+#   depends = "decido"
+#   , includes = '#include "decido/decido.hpp"'
+#   , code = '
+#     Rcpp::IntegerVector earcut0( SEXP polygon ) {
+#       return decido::api::earcut( polygon );
+#     }
+#   '
+# )
+# 
+# poly <- list(matrix(c(0,0,0,1,1,1,1,0,0,0), ncol = 2, byrow = T))
+# earcut0( poly )
+# # [1] 1 4 3 3 2 1
 
 ## ----triplot------------------------------------------------------------------
 ## plot triangles (input is triplets of xy coordinates)
@@ -138,6 +138,6 @@ par(op)
 
 
 
-## ---- include=FALSE-----------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 # , and it's also not the only way to do it, the grid package uses a grouping vector rather than a sparse index like this. The spatial packages sp and sf explicitly use structural hierarchies rather than more abstract specifications. The fortify-approach in ggplot2 is more like the grid one. A sparse representation is closer to what is needed for topological operations and visualization, consider that when we have triangles there are no need for "holes", we can identify which triangles will be plotted and how (or not), and an index into the vertices available becomes a key efficiency feature. (See [silicate](https://github.com/hypertidy/silicate) for a lot more on this topic). 
 
